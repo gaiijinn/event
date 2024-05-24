@@ -49,15 +49,19 @@ class User(BaseUser, models.Model):
     def check_level(self):
         user_achievement_statuses = UserAchievementStatus.objects.filter(user=self, is_achieved=True)
         total_exp = sum(status.achievement.given_exp for status in user_achievement_statuses)
-        self.user_exp_right_now = total_exp
         user_level = UserLevels.objects.filter(low_range__lte=total_exp, top_range__gte=total_exp).first()
 
         if not user_level:
-            self.user_level = UserLevels.objects.last()
+            user_level = UserLevels.objects.last()
         else:
-            self.user_level = user_level
+            user_level = user_level
 
-        self.save()
+        User.objects.filter(pk=self.pk).update(user_exp_right_now=total_exp, user_level=user_level)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(User, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+        self.check_level()
 
 
 class UserAchievementStatus(models.Model):

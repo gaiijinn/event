@@ -17,7 +17,12 @@ class UserAchievementStatusSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    achievements = UserAchievementStatusSerializer(source="userachievementstatus_set", many=True)
+    achievements = UserAchievementStatusSerializer(source="userachievementstatus_set", many=True, required=False)
+    user_level = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+    user_rating = serializers.FloatField(default=0)
 
     class Meta:
         model = User

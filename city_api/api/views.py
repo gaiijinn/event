@@ -8,5 +8,5 @@ from rest_framework.viewsets import ModelViewSet
 
 class UserViewSet(ModelViewSet):
     queryset = (User.objects.select_related('user_level')
-                .prefetch_related('userachievementstatus_set__achievement'))
+                .prefetch_related('userachievementstatus_set__achievement').order_by('-id'))
     serializer_class = UserSerializer
