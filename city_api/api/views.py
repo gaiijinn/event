@@ -7,7 +7,6 @@ from rest_framework.viewsets import ModelViewSet
 
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.select_related('organization', 'user_level').prefetch_related('achievements')
-    #queryset = User.objects.select_related('organization', 'user_level')
-    #queryset = User.objects.all()
+    queryset = (User.objects.select_related('user_level')
+                .prefetch_related('userachievementstatus_set__achievement'))
     serializer_class = UserSerializer

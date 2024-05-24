@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'debug_toolbar',
+    'django_filters',
 
     'django_use_email_as_username.apps.DjangoUseEmailAsUsernameConfig',  # use username as email
     'city_apps.custom_user.apps.CustomUserConfig',
