@@ -75,8 +75,9 @@ class UserAchievementStatus(models.Model):
 
     def check_if_achieved(self):
         if self.achievement.final_value <= self.progress_right_now:
-            self.is_achieved = True
             UserAchievementStatus.objects.filter(pk=self.pk).update(is_achieved=True)   # чтобы не было рекурсии
+        else:
+            UserAchievementStatus.objects.filter(pk=self.pk).update(is_achieved=False)
 
 
 
