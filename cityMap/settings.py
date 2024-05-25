@@ -140,7 +140,7 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_URL = '/media/'
-MIDEA_ROOT = BASE_DIR / '/media/'
+MEDIA_ROOT = BASE_DIR / '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -148,3 +148,10 @@ MIDEA_ROOT = BASE_DIR / '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'custom_user.User'
+
+# DRF
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 1,
+}

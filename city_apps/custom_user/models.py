@@ -29,7 +29,7 @@ class UserAchievement(models.Model):
     description = models.CharField(max_length=256)
     final_value = models.SmallIntegerField()
     given_exp = models.SmallIntegerField()
-    image = models.ImageField(upload_to='users/achievements', default='static/achievement/achiv.jpg')
+    image = models.ImageField(upload_to='users/achievements', default='static/achievement/base.jpg')
     for_org = models.BooleanField(default=False)
     for_def_user = models.BooleanField(default=True)
 
@@ -40,7 +40,7 @@ class UserAchievement(models.Model):
 class User(BaseUser, models.Model):
     objects = BaseUserManager()
     picture_profile = models.ImageField(upload_to='users/users_picture_profile', null=True, blank=True,
-                                        default='static/picture_profile/pp.jpg')
+                                        default='static/picture_profile/base.jpg')
     user_level = models.ForeignKey(to=UserLevels, on_delete=models.CASCADE, null=True, blank=True)
     user_rating = models.FloatField(null=True, blank=True, default=0)
     user_exp_right_now = models.SmallIntegerField(null=True, blank=True, default=0)

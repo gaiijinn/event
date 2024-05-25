@@ -17,14 +17,14 @@ class UserAchievementStatusSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    achievements = UserAchievementStatusSerializer(source="userachievementstatus_set", many=True, required=False)
     user_level = serializers.SlugRelatedField(
         read_only=True,
         slug_field='name'
     )
     user_rating = serializers.FloatField(default=0)
+    user_exp_right_now = serializers.IntegerField(default=0)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name',
-                  'user_level', 'user_rating', 'user_exp_right_now', 'achievements')
+        fields = ('id', 'email', 'first_name', 'last_name', 'picture_profile',
+                  'user_level', 'user_rating', 'user_exp_right_now')
