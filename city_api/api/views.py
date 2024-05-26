@@ -1,5 +1,6 @@
 import django.core.exceptions
-
+from django_filters import rest_framework as filters
+from .filters import UserAchievementFilter, UserAchievementStatusFilter
 from city_apps.custom_user.models import User, UserAchievement, UserAchievementStatus
 from city_api.api.serializers import UserSerializer, UserAchievementSerializer, UserAchievementStatusSerializer
 from rest_framework.viewsets import ModelViewSet
@@ -13,7 +14,10 @@ from rest_framework import status
 class UserAchievementViewSet(ModelViewSet):
     queryset = UserAchievement.objects.all().order_by('-id')
     serializer_class = UserAchievementSerializer
+    pagination_class = None
     permission_classes = (IsAdminUser, )
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = UserAchievementFilter
 
 
 # профиль юзера
@@ -35,28 +39,14 @@ class UserAchievementStatusListApiView(ListAPIView):
     serializer_class = UserAchievementStatusSerializer
     pagination_class = None
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = UserAchievementStatusFilter
 
     def get_queryset(self):
         return UserAchievementStatus.objects.all()
 
-    def check_param(self, param):
-        try:
-            if param == "True" or param == "False":
-                param = param
-            else:
-                param = None
-        except django.core.exceptions.ValidationError:
-            param = None
-
-        return param
-
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(user=request.user)
-        param = self.request.query_params.get('is_achieved')
-
-        param = self.check_param(param)
-        if param is not None:
-            queryset = self.get_queryset().filter(user=request.user, is_achieved=param)
-
+        queryset = self.filter_queryset(queryset)
         serializer = self.serializer_class(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)

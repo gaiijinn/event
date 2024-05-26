@@ -45,6 +45,7 @@ class User(BaseUser, models.Model):
     user_rating = models.FloatField(null=True, blank=True, default=0)
     user_exp_right_now = models.SmallIntegerField(null=True, blank=True, default=0)
     achievements = models.ManyToManyField(UserAchievement, through='UserAchievementStatus', related_name='users')
+    is_org = models.BooleanField(default=False)
 
     def check_level(self):
         user_achievement_statuses = UserAchievementStatus.objects.filter(user=self, is_achieved=True)
@@ -78,6 +79,3 @@ class UserAchievementStatus(models.Model):
             UserAchievementStatus.objects.filter(pk=self.pk).update(is_achieved=True)   # чтобы не было рекурсии
         else:
             UserAchievementStatus.objects.filter(pk=self.pk).update(is_achieved=False)
-
-
-

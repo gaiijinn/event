@@ -5,7 +5,7 @@ from city_apps.custom_user.models import User, UserAchievement, UserAchievementS
 class UserAchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAchievement
-        fields = ('id', 'name', 'description', 'final_value', 'given_exp', 'image')
+        fields = ('id', 'name', 'description', 'final_value', 'given_exp', 'image', 'for_org', 'for_def_user')
 
 
 class UserAchievementStatusSerializer(serializers.ModelSerializer):

@@ -11,25 +11,49 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env(
+    READ_DOT_ENV_FILE=True,  # Попробуйте установить параметр, указывающий на чтение файла .env
+    ENV_FILE_ENCODING='utf-8',
+
+    SECRET_KEY=(str),
+    DEBUG=(bool),
+    DOMAIN_NAME=(str),
+
+    DATABASE_NAME=(str),
+    DATABASE_USER=(str),
+    DATABASE_PASSWORD=(str),
+    DATABASE_HOST=(str),
+    DATABASE_PORT=(str),
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!qs99%pp96i1@j5a!xhgz^__li73-_5y3@u9ozl8bk8ok=msn$'
+
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
+
+DOMAIN_NAME = env('DOMAIN_NAME')
 
 # debug toolbar
 
 INTERNAL_IPS = [
-    "127.0.0.1",
+    '127.0.0.1',
+    '172.17.0.1',
+    'host.docker.internal'
 ]
 
 # Application definition
@@ -88,14 +112,16 @@ WSGI_APPLICATION = 'cityMap.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': "django.db.backends.postgresql",
-        'NAME': 'citymap',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        #'HOST': env('DATABASE_HOST'),
         'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
+        'PORT': env('DATABASE_PORT'),
+    },
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
