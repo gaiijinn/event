@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import environ
+import socket
 import os
 
 env = environ.Env(
@@ -27,6 +28,9 @@ env = environ.Env(
     DATABASE_PASSWORD=(str),
     DATABASE_HOST=(str),
     DATABASE_PORT=(str),
+
+    REDIS_PORT=(str),
+    REDIS_HOST=(str),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -50,11 +54,10 @@ DOMAIN_NAME = env('DOMAIN_NAME')
 
 # debug toolbar
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-    '172.17.0.1',
-    'host.docker.internal'
-]
+INTERNAL_IPS = ["127.0.0.1"]
+
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 
 # Application definition
 
@@ -116,8 +119,7 @@ DATABASES = {
         'NAME': env('DATABASE_NAME'),
         'USER': env('DATABASE_USER'),
         'PASSWORD': env('DATABASE_PASSWORD'),
-        #'HOST': env('DATABASE_HOST'),
-        'HOST': '127.0.0.1',
+        'HOST': env('DATABASE_HOST'),
         'PORT': env('DATABASE_PORT'),
     },
 }
@@ -155,15 +157,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    BASE_DIR / 'static',
-)
+if DEBUG:
+    STATICFILES_DIRS = (
+        BASE_DIR / 'static',
+    )
+else:
+    STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / '/media/'
@@ -180,4 +183,16 @@ AUTH_USER_MODEL = 'custom_user.User'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 1,
+}
+
+# Redis
+
+REDIS_HOST = env('REDIS_HOST')
+REDIS_PORT = env('REDIS_PORT')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}',
+    }
 }

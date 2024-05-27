@@ -12,4 +12,4 @@ RUN chmod +x /wait-for-it.sh
 CMD /wait-for-it.sh postgres:5432 -- \
     python manage.py migrate && \
     python manage.py shell -c "from django.contrib.auth import get_user_model; User=get_user_model(); User.objects.filter(email='admin@gmail.com').exists() or User.objects.create_superuser('admin@gmail.com', 'admin')" && \
-    python manage.py runserver 0.0.0.0:8000
+    gunicorn citymap.wsgi:application --bind 0.0.0.0:8000

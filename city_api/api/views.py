@@ -1,4 +1,3 @@
-import django.core.exceptions
 from django_filters import rest_framework as filters
 from .filters import UserAchievementFilter, UserAchievementStatusFilter
 from city_apps.custom_user.models import User, UserAchievement, UserAchievementStatus
@@ -8,6 +7,10 @@ from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
+from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 # Create your views here.
 
 
@@ -18,6 +21,10 @@ class UserAchievementViewSet(ModelViewSet):
     permission_classes = (IsAdminUser, )
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = UserAchievementFilter
+
+    @method_decorator(cache_page(60 * 5))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 # профиль юзера
@@ -45,8 +52,9 @@ class UserAchievementStatusListApiView(ListAPIView):
     def get_queryset(self):
         return UserAchievementStatus.objects.all()
 
+    @method_decorator(cache_page(60 * 2)) #2мин
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(user=request.user)
-        queryset = self.filter_queryset(queryset)
-        serializer = self.serializer_class(queryset, many=True, context={'request': request})
+        filter_queryset = self.filter_queryset(queryset)
+        serializer = self.serializer_class(filter_queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)

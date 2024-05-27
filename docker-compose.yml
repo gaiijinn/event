@@ -13,13 +13,22 @@ services:
     networks:
       - citymap-network
 
-  prediction:
+  redis:
+    image: redis:7.2.5
+    container_name: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - citymap-network
+
+  citymap:
     build:
       context: .
     ports:
       - "8000:8000"
     depends_on:
       - postgres
+      - redis
     environment:
       DEBUG: ${DEBUG}
       SECRET_KEY: ${SECRET_KEY}
@@ -29,11 +38,28 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     networks:
       - citymap-network
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
+    volumes:
+      - static_volume:/app/static
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - citymap
+    networks:
+      - citymap-network
 
 networks:
   citymap-network:
     driver: bridge
+
+volumes:
+  static_volume:
