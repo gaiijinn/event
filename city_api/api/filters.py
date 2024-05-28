@@ -1,6 +1,6 @@
-import django_filters
-from city_apps.custom_user.models import UserAchievementStatus, User, UserAchievement
 from django_filters import rest_framework as filters
+
+from city_apps.custom_user.models import UserAchievement, UserAchievementStatus
 
 
 class UserAchievementFilter(filters.FilterSet):

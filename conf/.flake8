@@ -1,0 +1,6 @@
+[flake8]
+exclude =
+    ../cityMap/settings.py
+    city_apps/*/migrations/*
+max-line-length = 120
+ignore = E402,E501,F401

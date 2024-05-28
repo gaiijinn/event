@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import *
+
+from .models import (Organization, OrgType, User, UserAchievement,
+                     UserAchievementStatus, UserLevels)
 
 # Register your models here.
 

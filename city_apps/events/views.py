@@ -1,3 +1,3 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import HttpResponse, render
 
 # Create your views here.

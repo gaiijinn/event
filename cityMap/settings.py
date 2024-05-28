@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
-import environ
-import socket
 import os
+import socket
+from pathlib import Path
+
+import environ
 
 env = environ.Env(
     READ_DOT_ENV_FILE=True,  # Попробуйте установить параметр, указывающий на чтение файла .env
@@ -36,7 +37,7 @@ env = environ.Env(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(BASE_DIR / '.env')
+environ.Env.read_env(BASE_DIR / 'conf/.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -75,6 +76,7 @@ INSTALLED_APPS = [
 
     'django_use_email_as_username.apps.DjangoUseEmailAsUsernameConfig',  # use username as email
     'city_apps.custom_user.apps.CustomUserConfig',
+    'city_apps.events.apps.EventsConfig',
     'city_api.api.apps.ApiConfig',
 ]
 

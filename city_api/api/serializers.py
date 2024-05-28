@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from city_apps.custom_user.models import User, UserAchievement, UserAchievementStatus
+
+from city_apps.custom_user.models import (User, UserAchievement,
+                                          UserAchievementStatus)
 
 
 class UserAchievementSerializer(serializers.ModelSerializer):

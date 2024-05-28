@@ -1,6 +1,7 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import *
+
+from .models import User, UserAchievement, UserAchievementStatus
 
 
 @receiver(post_save, sender=User)
@@ -36,5 +37,3 @@ def update_user_info(sender, instance, created, **kwargs):
 
         user = instance.user
         user.check_level()
-
-
