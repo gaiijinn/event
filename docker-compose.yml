@@ -1,5 +1,6 @@
 version: '3.9'
 
+
 services:
   postgres:
     image: postgres:latest
@@ -22,6 +23,8 @@ services:
       - citymap-network
 
   citymap:
+    env_file:
+      - .env
     build:
       context: .
     ports:

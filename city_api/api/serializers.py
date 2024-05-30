@@ -3,6 +3,8 @@ from rest_framework import serializers
 from city_apps.custom_user.models import (User, UserAchievement,
                                           UserAchievementStatus)
 
+from city_apps.events.models import EventTypes, Events, EventGuests
+
 
 class UserAchievementSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +32,27 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'picture_profile',
                   'user_level', 'user_rating', 'user_exp_right_now')
+
+
+class EventTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventTypes
+        fields = ('id', 'event_type', )
+
+
+class EventSerializer(serializers.ModelSerializer):
+    user_full_name = serializers.SerializerMethodField()
+    event_type = serializers.SlugRelatedField(
+        queryset=EventTypes.objects.all(),
+        slug_field='event_type'
+    )
+
+    event_main_photo = serializers.ImageField(allow_empty_file=False, use_url=True)
+
+    class Meta:
+        model = Events
+        fields = ('id', 'user_full_name', 'event_name', 'event_descr', 'event_type', 'event_address', 'date',
+                  'begin_time', 'end_time', 'event_main_photo', 'additional_event_photo', 'price', 'coordinates')
+
+    def get_user_full_name(self, obj):
+        return obj.user.get_full_name()

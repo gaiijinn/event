@@ -4,10 +4,10 @@ from city_apps.custom_user.models import User
 
 
 class EventTypes(models.Model):
-    event_name = models.CharField(max_length=256, unique=True)
+    event_type = models.CharField(max_length=256, unique=True)
 
     def __str__(self):
-        return f"{self.event_name}"
+        return f"{self.event_type}"
 
 
 class Events(models.Model):
@@ -20,7 +20,7 @@ class Events(models.Model):
     begin_time = models.TimeField()
     end_time = models.TimeField()
     event_main_photo = models.ImageField(upload_to='users/events')
-    additional_event_photo = models.ImageField(upload_to='users/events', null=True, blank=True)
+    additional_event_photo = models.ImageField(upload_to='users/events', blank=True)
     price = models.IntegerField(default=0, null=True, blank=True)
     coordinates = models.JSONField(null=True, blank=True)
 
@@ -32,4 +32,4 @@ class EventGuests(models.Model):
     event = models.ForeignKey(to=Events, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.event.event_name} - {self.user.email}"
+        return f"{self.event.event_type} - {self.user.email}"

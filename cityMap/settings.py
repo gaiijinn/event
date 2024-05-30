@@ -17,7 +17,7 @@ from pathlib import Path
 import environ
 
 env = environ.Env(
-    READ_DOT_ENV_FILE=True,  # Попробуйте установить параметр, указывающий на чтение файла .env
+    READ_DOT_ENV_FILE=True,
     ENV_FILE_ENCODING='utf-8',
 
     SECRET_KEY=(str),
@@ -37,7 +37,7 @@ env = environ.Env(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(BASE_DIR / 'conf/.env')
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -55,7 +55,7 @@ DOMAIN_NAME = env('DOMAIN_NAME')
 
 # debug toolbar
 
-INTERNAL_IPS = ["127.0.0.1"]
+INTERNAL_IPS = ['127.0.0.1', ]
 
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
@@ -184,7 +184,7 @@ AUTH_USER_MODEL = 'custom_user.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 1,
+    'PAGE_SIZE': 10,
 }
 
 # Redis

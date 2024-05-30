@@ -1,24 +1,33 @@
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django_filters import rest_framework as filters
-from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet
-
-from city_api.api.filters import UserAchievementFilter
-from city_api.api.serializers import UserAchievementSerializer
-from city_apps.custom_user.models import UserAchievement
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from city_apps.events.models import EventGuests, Events, EventTypes
+from city_api.api.serializers import EventTypeSerializer, EventSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from django_filters import rest_framework as filters
 
 # Create your views here.
 
 
-class UserAchievementViewSet(ModelViewSet):
-    queryset = UserAchievement.objects.all().order_by('-id')
-    serializer_class = UserAchievementSerializer
-    pagination_class = None
+class EventTypesModelViewSet(ModelViewSet):
+    serializer_class = EventTypeSerializer
+    queryset = EventTypes.objects.all()
     permission_classes = (IsAdminUser, )
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = UserAchievementFilter
+    filterset_fields = ('event_type', )
 
-    @method_decorator(cache_page(60 * 5))
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+
+class EventModelViewSet(ModelViewSet):
+    permission_classes = (IsAuthenticated, )
+    pagination_class = None
+    serializer_class = EventSerializer
+    queryset = Events.objects.filter().order_by('-id')
+    parser_classes = (MultiPartParser, FormParser)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('event_name', 'event_type', 'date')
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user).select_related('user', 'event_type')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
