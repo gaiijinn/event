@@ -56,3 +56,11 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_user_full_name(self, obj):
         return obj.user.get_full_name()
+
+
+class EventGuestSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = EventGuests
+        fields = ('user', )
