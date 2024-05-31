@@ -24,7 +24,7 @@ services:
 
   citymap:
     env_file:
-      - .env
+      - .env.docker
     build:
       context: .
     ports:

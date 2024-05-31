@@ -36,9 +36,9 @@ class UserAchievementStatusListApiView(ListAPIView):
     serializer_class = UserAchievementStatusSerializer
     pagination_class = None
     permission_classes = (IsAuthenticated,)
-    parser_classes = (MultiPartParser, FormParser)
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = UserAchievementStatusFilter
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_queryset(self):
         return UserAchievementStatus.objects.all()
@@ -49,7 +49,6 @@ class UserAchievementStatusListApiView(ListAPIView):
         filter_queryset = self.filter_queryset(queryset)
         serializer = self.serializer_class(filter_queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 #######
 
