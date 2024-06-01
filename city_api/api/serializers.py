@@ -47,8 +47,6 @@ class EventSerializer(serializers.ModelSerializer):
         slug_field='event_type'
     )
 
-    event_main_photo = serializers.ImageField(required=True)
-
     class Meta:
         model = Events
         fields = ('id', 'user_full_name', 'event_name', 'event_descr', 'event_type', 'event_address', 'date',
