@@ -56,10 +56,8 @@ class EventSerializer(serializers.ModelSerializer):
         return obj.user.get_full_name()
 
     def validate(self, data):
-        request = self.context.get('request')
-        if request and 'event_main_photo' not in request.FILES:
-            raise serializers.ValidationError(
-                {"event_main_photo": "Key 'event_main_photo' not found in uploaded files."})
+        if self.context['request'].method == 'POST' and 'event_main_photo' not in data:
+            raise serializers.ValidationError({"event_main_photo": "This field is required."})
         return data
 
 

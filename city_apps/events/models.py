@@ -19,7 +19,7 @@ class Events(models.Model):
     date = models.DateField()
     begin_time = models.TimeField()
     end_time = models.TimeField()
-    event_main_photo = models.ImageField(upload_to='users/events', blank=False)
+    event_main_photo = models.ImageField(upload_to='users/events', blank=True)
     additional_event_photo = models.ImageField(upload_to='users/events', blank=True)
     price = models.IntegerField(default=0, null=True, blank=True)
     coordinates = models.JSONField(null=True, blank=True)

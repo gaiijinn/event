@@ -42,7 +42,6 @@ class EventModelViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-
 class EventGuestsListAPIView(ListAPIView):
     queryset = EventGuests.objects.all().prefetch_related('user')
     permission_classes = (IsAuthenticated, )
