@@ -202,3 +202,11 @@ CACHES = {
 
 CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+
+# Email
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'vladruban8@gmail.com'
+EMAIL_HOST_PASSWORD = 'okzv rgwx coom qwsa'
+EMAIL_USE_SSL = True
