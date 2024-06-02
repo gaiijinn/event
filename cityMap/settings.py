@@ -55,10 +55,9 @@ DOMAIN_NAME = env('DOMAIN_NAME')
 
 # debug toolbar
 
-INTERNAL_IPS = ['127.0.0.1', ]
-
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+if DEBUG:
+    # `debug` is only True in templates if the vistor IP is in INTERNAL_IPS.
+    INTERNAL_IPS = type("c", (), {"__contains__": lambda *a: True})()
 
 # Application definition
 

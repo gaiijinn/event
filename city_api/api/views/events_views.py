@@ -41,12 +41,6 @@ class EventModelViewSet(ModelViewSet):
         serializer = self.serializer_class(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        if 'event_main_photo' not in request.FILES:
-            return Response({"detail": "Key 'event_main_photo' not found in uploaded files."},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        return super().create(request, *args, **kwargs)
 
 
 class EventGuestsListAPIView(ListAPIView):
